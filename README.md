@@ -1,1 +1,4 @@
 # pds-diary
+
+# 기능 목록
+1. 주에 To Do List 적어보기
