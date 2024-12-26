@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Week {
+public class WeekPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Week {
     private LocalDate day;
     private String plan;
 
-    public Week(LocalDate day, String plan) {
+    public WeekPlan(LocalDate day, String plan) {
         this.day = day;
         this.plan = plan;
     }

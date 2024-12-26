@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Time {
+public class TimePlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Time {
     private LocalTime localTime;
     private String plan;
 
-    public Time(LocalDateTime localDateTime, String plan) {
+    public TimePlan(LocalDateTime localDateTime, String plan) {
         this.localTime = localDateTime.toLocalTime();
         this.plan = plan;
     }
