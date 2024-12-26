@@ -1,5 +1,6 @@
 package com.example.diary.controller;
 
+import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
@@ -28,5 +29,10 @@ public class PlanController {
     @PostMapping("/plan/time/do")
     public Long createTimeDo(@RequestBody CreateTimeDoRq rq) {
         return planService.createTimeDo(rq);
+    }
+
+    @PostMapping("/plan/day/see")
+    public Long createDaySee(@RequestBody CreateDaySeeRq rq) {
+        return planService.createDaySee(rq);
     }
 }

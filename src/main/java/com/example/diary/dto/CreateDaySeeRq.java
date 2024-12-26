@@ -1,15 +1,15 @@
 package com.example.diary.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class CreateTimePlanRq {
+public class CreateDaySeeRq {
 
-    private LocalDateTime time;
-    private String plan;
+    private LocalDate date;
+    private String see;
 }

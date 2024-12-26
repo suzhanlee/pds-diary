@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTimeDoRq {
 
-    private LocalDateTime currentTime;
+    private LocalDateTime time;
     private String actualWork;
 }
