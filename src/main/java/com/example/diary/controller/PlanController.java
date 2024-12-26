@@ -1,7 +1,8 @@
 package com.example.diary.controller;
 
+import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
-import com.example.diary.service.WeekService;
+import com.example.diary.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,12 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class WeekController {
+public class PlanController {
 
-    private final WeekService weekService;
+    private final PlanService planService;
 
-    @PostMapping("/week")
+    @PostMapping("/plan/week")
     public Long createWeekPlan(@RequestBody CreateWeekPlanRq rq) {
-        return weekService.createWeekPlan(rq);
+        return planService.createWeekPlan(rq);
+    }
+
+    @PostMapping("/plan/time")
+    public Long createTimePlan(@RequestBody CreateTimePlanRq rq) {
+        return planService.createTimePlan(rq);
     }
 }
