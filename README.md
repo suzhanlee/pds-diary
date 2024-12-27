@@ -5,3 +5,4 @@
 2. 시간에 plan 적기 (startTime, endTime)
 3. 시간에 do 적기 (startTime, endTime)
 4. 요일에 see 적기
+5. 주간 to do list + 1개의 요일 see, plan, do 만 보기

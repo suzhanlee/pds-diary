@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Week {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     private LocalDate date;
@@ -36,6 +36,10 @@ public class Week {
 
     public Week(LocalDate date) {
         this.date = date;
+    }
+
+    public static Week empty() {
+        return new Week();
     }
 
     public void addDay(Day day) {

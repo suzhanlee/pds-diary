@@ -32,7 +32,7 @@ public class PlanService {
     public Long createTimePlan(CreateTimePlanRq rq) {
         Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
 
-        Day day = createDayPlanWithDateTime(week, rq.getStartTime());
+        Day day = findOrCreateDayPlanWithDateTime(week, rq.getStartTime());
 
         TimePlan timePlan = new TimePlan(rq.getPlan(), rq.getStartTime(), rq.getEndTime());
         day.addTimePlan(timePlan);
@@ -42,14 +42,14 @@ public class PlanService {
     public Long createTimeDo(CreateTimeDoRq rq) {
         Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
 
-        Day day = createDayPlanWithDateTime(week, rq.getStartTime());
+        Day day = findOrCreateDayPlanWithDateTime(week, rq.getStartTime());
 
         TimeDo timeDo = new TimeDo(rq.getActualWork(), rq.getStartTime(), rq.getEndTime());
         day.addTimeDo(timeDo);
         return timeDo.getId();
     }
 
-    private Day createDayPlanWithDateTime(Week week, LocalDateTime dateTime) {
+    private Day findOrCreateDayPlanWithDateTime(Week week, LocalDateTime dateTime) {
         if (week.isPersistedWeek()) {
             return week.ensureDayPlanExists(dateTime);
         }
@@ -59,7 +59,7 @@ public class PlanService {
     }
 
     private Week findOrCreateWeek(LocalDateTime startTime, LocalDateTime endTime) {
-        return weekRepository.findWeekWithHourPlan(
+        return weekRepository.findTotalWeekInfoWithHourPlan(
                 startTime.toLocalDate(),
                 startTime,
                 endTime
