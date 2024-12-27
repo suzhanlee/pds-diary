@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +19,18 @@ public class TimeDo {
     @Getter
     private Long id;
 
-    private LocalTime time;
     private String actualWork;
 
-    public TimeDo(LocalDateTime currentTime, String actualWork) {
-        this.time = currentTime.toLocalTime();
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    public TimeDo(String actualWork, LocalDateTime startTime, LocalDateTime endTime) {
         this.actualWork = actualWork;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public boolean isTimeInRange(LocalDateTime time) {
+        return !time.isBefore(startTime) && !time.isAfter(endTime);
     }
 }

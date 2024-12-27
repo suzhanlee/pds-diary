@@ -1,17 +1,16 @@
 package com.example.diary.service;
 
-import com.example.diary.domain.DaySee;
+import com.example.diary.domain.Day;
 import com.example.diary.domain.TimeDo;
 import com.example.diary.domain.TimePlan;
-import com.example.diary.domain.WeekPlan;
+import com.example.diary.domain.Week;
 import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
-import com.example.diary.repository.DaySeeRepository;
-import com.example.diary.repository.TimeDoRepository;
-import com.example.diary.repository.TimePlanRepository;
-import com.example.diary.repository.WeekPlanRepository;
+import com.example.diary.repository.DayRepository;
+import com.example.diary.repository.WeekRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,32 +20,55 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PlanService {
 
-    private final WeekPlanRepository weekPlanRepository;
-    private final TimePlanRepository timePlanRepository;
-    private final TimeDoRepository timeDoRepository;
-    private final DaySeeRepository daySeeRepository;
+    private final WeekRepository weekRepository;
+    private final DayRepository dayRepository;
 
     public Long createWeekPlan(CreateWeekPlanRq rq) {
-        WeekPlan weekPlan = new WeekPlan(rq.getDate(), rq.getPlan());
-        weekPlanRepository.save(weekPlan);
-        return weekPlan.getId();
+        Week week = new Week(rq.getDate(), rq.getPlan());
+        weekRepository.save(week);
+        return week.getId();
     }
 
     public Long createTimePlan(CreateTimePlanRq rq) {
-        TimePlan timePlan = new TimePlan(rq.getTime(), rq.getPlan());
-        timePlanRepository.save(timePlan);
+        Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
+
+        Day day = createDayPlanWithDateTime(week, rq.getStartTime());
+
+        TimePlan timePlan = new TimePlan(rq.getPlan(), rq.getStartTime(), rq.getEndTime());
+        day.addTimePlan(timePlan);
         return timePlan.getId();
     }
 
     public Long createTimeDo(CreateTimeDoRq rq) {
-        TimeDo timeDo = new TimeDo(rq.getTime(), rq.getActualWork());
-        timeDoRepository.save(timeDo);
+        Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
+
+        Day day = createDayPlanWithDateTime(week, rq.getStartTime());
+
+        TimeDo timeDo = new TimeDo(rq.getActualWork(), rq.getStartTime(), rq.getEndTime());
+        day.addTimeDo(timeDo);
         return timeDo.getId();
     }
 
+    private Day createDayPlanWithDateTime(Week week, LocalDateTime dateTime) {
+        if (week.isPersistedWeek()) {
+            return week.ensureDayPlanExists(dateTime);
+        }
+        Day day = new Day(dateTime.toLocalDate());
+        day.addWeek(week);
+        return day;
+    }
+
+    private Week findOrCreateWeek(LocalDateTime startTime, LocalDateTime endTime) {
+        return weekRepository.findWeekWithHourPlan(
+                startTime.toLocalDate(),
+                startTime,
+                endTime
+        ).orElseGet(() -> new Week(startTime.toLocalDate()));
+    }
+
     public Long createDaySee(CreateDaySeeRq rq) {
-        DaySee daySee = new DaySee(rq.getDate(), rq.getSee());
-        daySeeRepository.save(daySee);
-        return daySee.getId();
+        Day day = new Day(rq.getDate(), rq.getSee());
+        dayRepository.save(day);
+        return day.getId();
     }
 }

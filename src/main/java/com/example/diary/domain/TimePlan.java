@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +18,18 @@ public class TimePlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
-
-    private LocalTime localTime;
     private String plan;
 
-    public TimePlan(LocalDateTime localDateTime, String plan) {
-        this.localTime = localDateTime.toLocalTime();
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    public TimePlan(String plan, LocalDateTime startTime, LocalDateTime endTime) {
         this.plan = plan;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public boolean isTimeInRange(LocalDateTime time) {
+        return !time.isBefore(startTime) && !time.isAfter(endTime);
     }
 }
