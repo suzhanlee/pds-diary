@@ -8,9 +8,11 @@ import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
+import com.example.diary.dto.UpdateTimeDoRq;
 import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
 import com.example.diary.repository.DayRepository;
+import com.example.diary.repository.TimeDoRepository;
 import com.example.diary.repository.TimePlanRepository;
 import com.example.diary.repository.WeekRepository;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class PlanService {
     private final WeekRepository weekRepository;
     private final DayRepository dayRepository;
     private final TimePlanRepository timePlanRepository;
+    private final TimeDoRepository timeDoRepository;
 
     public Long createWeekPlan(CreateWeekPlanRq rq) {
         Week week = new Week(rq.getDate(), rq.getPlan());
@@ -84,5 +87,10 @@ public class PlanService {
     public void updateTimePlan(Long timePlanId, UpdateTimePlanRq rq) {
         TimePlan timePlan = timePlanRepository.findById(timePlanId).orElseThrow();
         timePlan.updatePlan(rq.getPlan());
+    }
+
+    public void updateTimeDo(Long timeDoId, UpdateTimeDoRq rq) {
+        TimeDo timeDo = timeDoRepository.findById(timeDoId).orElseThrow();
+        timeDo.updateDo(rq.getActualWork());
     }
 }

@@ -33,4 +33,8 @@ public class TimeDo {
     public boolean isTimeInRange(LocalDateTime time) {
         return !time.isBefore(startTime) && !time.isAfter(endTime);
     }
+
+    public void updateDo(String actualWork) {
+        this.actualWork = actualWork;
+    }
 }
