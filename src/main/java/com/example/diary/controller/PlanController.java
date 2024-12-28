@@ -6,6 +6,7 @@ import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
 import com.example.diary.dto.FindDayOfWeekPlanRq;
 import com.example.diary.dto.FindDayOfWeekPlanRs;
+import com.example.diary.dto.UpdateDaySeeRq;
 import com.example.diary.dto.UpdateTimeDoRq;
 import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
@@ -64,5 +65,10 @@ public class PlanController {
     @PutMapping("/plan/time/do/{timeDoId}")
     public void updateTimeDo(@PathVariable Long timeDoId, @RequestBody UpdateTimeDoRq rq) {
         planService.updateTimeDo(timeDoId, rq);
+    }
+
+    @PutMapping("/plan/day/see/{daySeeId}")
+    public void updateDaySee(@PathVariable Long daySeeId, @RequestBody UpdateDaySeeRq rq) {
+        planService.updateDaySee(daySeeId, rq);
     }
 }

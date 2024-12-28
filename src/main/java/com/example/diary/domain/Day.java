@@ -72,4 +72,8 @@ public class Day {
     public void addTimeDo(TimeDo timeDo) {
         this.timeDos.add(timeDo);
     }
+
+    public void updateSee(String see) {
+        this.see = see;
+    }
 }

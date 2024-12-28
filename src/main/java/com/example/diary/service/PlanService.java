@@ -8,6 +8,7 @@ import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
+import com.example.diary.dto.UpdateDaySeeRq;
 import com.example.diary.dto.UpdateTimeDoRq;
 import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
@@ -92,5 +93,10 @@ public class PlanService {
     public void updateTimeDo(Long timeDoId, UpdateTimeDoRq rq) {
         TimeDo timeDo = timeDoRepository.findById(timeDoId).orElseThrow();
         timeDo.updateDo(rq.getActualWork());
+    }
+
+    public void updateDaySee(Long daySeeId, UpdateDaySeeRq rq) {
+        Day day = dayRepository.findById(daySeeId).orElseThrow();
+        day.updateSee(rq.getSee());
     }
 }
