@@ -1,8 +1,8 @@
 package com.example.diary.service;
 
-import com.example.diary.dto.FindDayOfWeekPlanRq;
 import com.example.diary.dto.FindDayOfWeekPlanRs;
 import com.example.diary.repository.WeekRepository;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +14,9 @@ public class FindPlanService {
 
     private final WeekRepository weekRepository;
 
-    public FindDayOfWeekPlanRs findSpecificDayOfWeekPlan(FindDayOfWeekPlanRq rq) {
-        return weekRepository.findWeekWithHourPlan(rq.getDate())
+    public FindDayOfWeekPlanRs findSpecificDayOfWeekPlan(LocalDate date) {
+        return weekRepository.findWeekWithHourPlan(date)
                 .map(FindDayOfWeekPlanRs::createByWeek)
-                .orElse(FindDayOfWeekPlanRs.empty(rq.getDate()));
+                .orElse(FindDayOfWeekPlanRs.empty(date));
     }
 }

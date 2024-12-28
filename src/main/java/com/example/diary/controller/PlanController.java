@@ -12,6 +12,7 @@ import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
 import com.example.diary.service.FindPlanService;
 import com.example.diary.service.PlanService;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,9 +48,9 @@ public class PlanController {
         return planService.createDaySee(rq);
     }
 
-    @GetMapping("/plan/week")
-    public FindDayOfWeekPlanRs findDayOfWeekPlan(@RequestBody FindDayOfWeekPlanRq rq) {
-        return findPlanService.findSpecificDayOfWeekPlan(rq);
+    @GetMapping("/plan/week/{date}")
+    public FindDayOfWeekPlanRs findDayOfWeekPlan(@PathVariable("date")LocalDate date) {
+        return findPlanService.findSpecificDayOfWeekPlan(date);
     }
 
     @PutMapping("/plan/week/{weekId}")
