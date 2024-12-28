@@ -49,6 +49,7 @@ public class PlanService {
         Day day = findOrCreateDayPlanWithDateTime(weekPlan, rq.getStartTime());
 
         TimePlan timePlan = new TimePlan(rq.getPlan(), rq.getStartTime(), rq.getEndTime());
+        timePlanRepository.save(timePlan);
         day.addTimePlan(timePlan);
         return timePlan.getId();
     }
@@ -60,15 +61,19 @@ public class PlanService {
         Day day = findOrCreateDayPlanWithDateTime(weekPlan, rq.getStartTime());
 
         TimeDo timeDo = new TimeDo(rq.getActualWork(), rq.getStartTime(), rq.getEndTime());
+        timeDoRepository.save(timeDo);
         day.addTimeDo(timeDo);
         return timeDo.getId();
     }
 
     private Day findOrCreateDayPlanWithDateTime(WeekPlan weekPlan, LocalDateTime dateTime) {
         if (weekPlan.isPersistedWeek()) {
-            return weekPlan.ensureDayPlanExists(dateTime);
+            Day day = weekPlan.ensureDayPlanExists(dateTime);
+            dayRepository.save(day);
+            return day;
         }
         Day day = new Day(dateTime.toLocalDate());
+        dayRepository.save(day);
         day.addWeek(weekPlan);
         return day;
     }
@@ -78,13 +83,18 @@ public class PlanService {
                 startTime.toLocalDate(),
                 startTime,
                 endTime
-        ).orElseGet(() -> new WeekPlan(member, startTime.toLocalDate()));
+        ).orElseGet(() -> {
+            WeekPlan weekPlan = new WeekPlan(member, startTime.toLocalDate());
+            weekRepository.save(weekPlan);
+            return weekPlan;
+        });
     }
 
     public Long createDaySee(CreateDaySeeRq rq) {
         Member member = memberRepository.findById(rq.getMemberId()).orElseThrow();
         WeekPlan weekPlan = findWeekInfoOrCreateWeek(rq.getDate(), member);
         Day day = new Day(rq.getDate(), rq.getSee());
+        dayRepository.save(day);
         weekPlan.addDay(day);
         dayRepository.save(day);
         return day.getId();
@@ -93,7 +103,11 @@ public class PlanService {
     private WeekPlan findWeekInfoOrCreateWeek(LocalDate date, Member member) {
         return weekRepository.findWeekWithHourPlan(
                 date
-        ).orElseGet(() -> new WeekPlan(member, date));
+        ).orElseGet(() -> {
+            WeekPlan weekPlan = new WeekPlan(member, date);
+            weekRepository.save(weekPlan);
+            return weekPlan;
+        });
     }
 
     public void updateWeekPlan(Long weekId, UpdateWeekPlanRq rq) {

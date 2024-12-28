@@ -43,4 +43,8 @@ public class TimePlan {
     public void updatePlan(String plan) {
         this.plan = plan;
     }
+
+    public void addDay(Day day) {
+        this.day = day;
+    }
 }

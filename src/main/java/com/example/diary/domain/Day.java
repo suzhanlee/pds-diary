@@ -11,8 +11,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +35,10 @@ public class Day {
     private WeekPlan weekPlan;
 
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TimePlan> timePlans = new ArrayList<>();
+    private Set<TimePlan> timePlans = new HashSet<>();
 
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TimeDo> timeDos = new ArrayList<>();
+    private Set<TimeDo> timeDos = new HashSet<>();
 
     public Day(LocalDate day, String see) {
         this.day = day;
@@ -67,10 +67,12 @@ public class Day {
 
     public void addTimePlan(TimePlan timePlan) {
         this.timePlans.add(timePlan);
+        timePlan.addDay(this);
     }
 
     public void addTimeDo(TimeDo timeDo) {
         this.timeDos.add(timeDo);
+        timeDo.addDay(this);
     }
 
     public void updateSee(String see) {

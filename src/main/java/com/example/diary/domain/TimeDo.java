@@ -44,4 +44,8 @@ public class TimeDo {
     public void updateDo(String actualWork) {
         this.actualWork = actualWork;
     }
+
+    public void addDay(Day day) {
+        this.day = day;
+    }
 }
