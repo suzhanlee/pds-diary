@@ -32,4 +32,8 @@ public class TimePlan {
     public boolean isTimeInRange(LocalDateTime time) {
         return !time.isBefore(startTime) && !time.isAfter(endTime);
     }
+
+    public void updatePlan(String plan) {
+        this.plan = plan;
+    }
 }

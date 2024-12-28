@@ -8,8 +8,10 @@ import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
+import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
 import com.example.diary.repository.DayRepository;
+import com.example.diary.repository.TimePlanRepository;
 import com.example.diary.repository.WeekRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class PlanService {
 
     private final WeekRepository weekRepository;
     private final DayRepository dayRepository;
+    private final TimePlanRepository timePlanRepository;
 
     public Long createWeekPlan(CreateWeekPlanRq rq) {
         Week week = new Week(rq.getDate(), rq.getPlan());
@@ -75,6 +78,11 @@ public class PlanService {
 
     public void updateWeekPlan(Long weekId, UpdateWeekPlanRq rq) {
         Week week = weekRepository.findById(weekId).orElseThrow();
-        week.update(rq.getPlan());
+        week.updatePlan(rq.getPlan());
+    }
+
+    public void updateTimePlan(Long timePlanId, UpdateTimePlanRq rq) {
+        TimePlan timePlan = timePlanRepository.findById(timePlanId).orElseThrow();
+        timePlan.updatePlan(rq.getPlan());
     }
 }

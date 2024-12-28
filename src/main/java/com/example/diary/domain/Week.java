@@ -62,7 +62,7 @@ public class Week {
         return id != null;
     }
 
-    public void update(String plan) {
+    public void updatePlan(String plan) {
         this.plan = plan;
     }
 }
