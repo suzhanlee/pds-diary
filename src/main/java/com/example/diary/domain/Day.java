@@ -34,10 +34,10 @@ public class Day {
     @JoinColumn(name = "week_plan_id")
     private WeekPlan weekPlan;
 
-    @OneToMany(mappedBy = "weekPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimePlan> timePlans = new ArrayList<>();
 
-    @OneToMany(mappedBy = "weekPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeDo> timeDos = new ArrayList<>();
 
     public Day(LocalDate day, String see) {

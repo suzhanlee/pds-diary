@@ -1,9 +1,12 @@
 package com.example.diary.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +26,10 @@ public class TimeDo {
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "day_id")
+    private Day day;
 
     public TimeDo(String actualWork, LocalDateTime startTime, LocalDateTime endTime) {
         this.actualWork = actualWork;
