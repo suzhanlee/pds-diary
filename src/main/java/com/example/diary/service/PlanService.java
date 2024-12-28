@@ -8,6 +8,7 @@ import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
 import com.example.diary.dto.CreateWeekPlanRq;
+import com.example.diary.dto.UpdateWeekPlanRq;
 import com.example.diary.repository.DayRepository;
 import com.example.diary.repository.WeekRepository;
 import java.time.LocalDateTime;
@@ -70,5 +71,10 @@ public class PlanService {
         Day day = new Day(rq.getDate(), rq.getSee());
         dayRepository.save(day);
         return day.getId();
+    }
+
+    public void updateWeekPlan(Long weekId, UpdateWeekPlanRq rq) {
+        Week week = weekRepository.findById(weekId).orElseThrow();
+        week.update(rq.getPlan());
     }
 }

@@ -61,4 +61,8 @@ public class Week {
     public boolean isPersistedWeek() {
         return id != null;
     }
+
+    public void update(String plan) {
+        this.plan = plan;
+    }
 }
