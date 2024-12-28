@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTimeDoRq {
 
+    private long memberId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String actualWork;

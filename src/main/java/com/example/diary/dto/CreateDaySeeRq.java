@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateDaySeeRq {
 
+    private long memberId;
     private LocalDate date;
     private String see;
 }

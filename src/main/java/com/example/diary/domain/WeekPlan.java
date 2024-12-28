@@ -1,9 +1,12 @@
 package com.example.diary.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Week {
+public class WeekPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,25 +29,44 @@ public class Week {
     private LocalDate date;
     private String plan;
 
-    @OneToMany(mappedBy = "week")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "weekPlan")
     private List<Day> days = new ArrayList<>();
 
-    public Week(LocalDate date, String plan) {
+    public WeekPlan(LocalDate date, String plan) {
         this.date = date;
         this.plan = plan;
     }
 
-    public Week(LocalDate date) {
+    public WeekPlan(LocalDate date) {
         this.date = date;
     }
 
-    public static Week empty() {
-        return new Week();
+    public WeekPlan(Member member, LocalDate date, String plan) {
+        this(date, plan);
+        addMember(member);
+    }
+
+    public WeekPlan(Member member, LocalDate date) {
+        this(date);
+        addMember(member);
+    }
+
+    public static WeekPlan empty() {
+        return new WeekPlan();
     }
 
     public void addDay(Day day) {
         this.days.add(day);
         day.addWeek(this);
+    }
+
+    public void addMember(Member member) {
+        this.member = member;
+        member.addWeekPlan(this);
     }
 
     public Day ensureDayPlanExists(LocalDateTime time) {

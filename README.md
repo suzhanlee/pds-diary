@@ -1,6 +1,7 @@
 # pds-diary
 
 ### 기능 목록
+Member 기반으로 계획 세우기 추가
 
 ### 생성
 1. 주에 To Do List 기능

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTimePlanRq {
 
+    private long memberId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String plan;

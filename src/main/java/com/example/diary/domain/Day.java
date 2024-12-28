@@ -31,13 +31,13 @@ public class Day {
     private String see;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "week_id")
-    private Week week;
+    @JoinColumn(name = "week_plan_id")
+    private WeekPlan weekPlan;
 
-    @OneToMany(mappedBy = "week", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "weekPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimePlan> timePlans = new ArrayList<>();
 
-    @OneToMany(mappedBy = "week", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "weekPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeDo> timeDos = new ArrayList<>();
 
     public Day(LocalDate day, String see) {
@@ -61,8 +61,8 @@ public class Day {
         return this.timeDos.stream().anyMatch(td -> td.isTimeInRange(time));
     }
 
-    public void addWeek(Week week) {
-        this.week = week;
+    public void addWeek(WeekPlan weekPlan) {
+        this.weekPlan = weekPlan;
     }
 
     public void addTimePlan(TimePlan timePlan) {

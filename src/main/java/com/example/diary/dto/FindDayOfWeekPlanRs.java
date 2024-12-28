@@ -1,6 +1,6 @@
 package com.example.diary.dto;
 
-import com.example.diary.domain.Week;
+import com.example.diary.domain.WeekPlan;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,11 +15,11 @@ public class FindDayOfWeekPlanRs {
     private String plan;
     private DaySeeDto daySeeDto;
 
-    public static FindDayOfWeekPlanRs createByWeek(Week week) {
+    public static FindDayOfWeekPlanRs createByWeek(WeekPlan weekPlan) {
         FindDayOfWeekPlanRs rs = new FindDayOfWeekPlanRs();
-        rs.date = week.getDate();
-        rs.plan = week.getPlan();
-        rs.daySeeDto = DaySeeDto.create(week.getDays().getFirst());
+        rs.date = weekPlan.getDate();
+        rs.plan = weekPlan.getPlan();
+        rs.daySeeDto = DaySeeDto.create(weekPlan.getDays().getFirst());
         return rs;
     }
 

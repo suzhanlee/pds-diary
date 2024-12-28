@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateWeekPlanRq {
 
+    private long memberId;
     private LocalDate date;
     private String plan;
 }

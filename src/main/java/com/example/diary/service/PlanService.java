@@ -1,9 +1,10 @@
 package com.example.diary.service;
 
 import com.example.diary.domain.Day;
+import com.example.diary.domain.Member;
 import com.example.diary.domain.TimeDo;
 import com.example.diary.domain.TimePlan;
-import com.example.diary.domain.Week;
+import com.example.diary.domain.WeekPlan;
 import com.example.diary.dto.CreateDaySeeRq;
 import com.example.diary.dto.CreateTimeDoRq;
 import com.example.diary.dto.CreateTimePlanRq;
@@ -13,9 +14,11 @@ import com.example.diary.dto.UpdateTimeDoRq;
 import com.example.diary.dto.UpdateTimePlanRq;
 import com.example.diary.dto.UpdateWeekPlanRq;
 import com.example.diary.repository.DayRepository;
+import com.example.diary.repository.MemberRepository;
 import com.example.diary.repository.TimeDoRepository;
 import com.example.diary.repository.TimePlanRepository;
 import com.example.diary.repository.WeekRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,21 +29,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PlanService {
 
+    private final MemberRepository memberRepository;
     private final WeekRepository weekRepository;
     private final DayRepository dayRepository;
     private final TimePlanRepository timePlanRepository;
     private final TimeDoRepository timeDoRepository;
 
     public Long createWeekPlan(CreateWeekPlanRq rq) {
-        Week week = new Week(rq.getDate(), rq.getPlan());
-        weekRepository.save(week);
-        return week.getId();
+        Member member = memberRepository.findById(rq.getMemberId()).orElseThrow();
+        WeekPlan weekPlan = new WeekPlan(member, rq.getDate(), rq.getPlan());
+        weekRepository.save(weekPlan);
+        return weekPlan.getId();
     }
 
     public Long createTimePlan(CreateTimePlanRq rq) {
-        Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
+        Member member = memberRepository.findById(rq.getMemberId()).orElseThrow();
+        WeekPlan weekPlan = findTotalWeekInfoOrCreateWeek(rq.getStartTime(), rq.getEndTime(), member);
 
-        Day day = findOrCreateDayPlanWithDateTime(week, rq.getStartTime());
+        Day day = findOrCreateDayPlanWithDateTime(weekPlan, rq.getStartTime());
 
         TimePlan timePlan = new TimePlan(rq.getPlan(), rq.getStartTime(), rq.getEndTime());
         day.addTimePlan(timePlan);
@@ -48,41 +54,51 @@ public class PlanService {
     }
 
     public Long createTimeDo(CreateTimeDoRq rq) {
-        Week week = findOrCreateWeek(rq.getStartTime(), rq.getEndTime());
+        Member member = memberRepository.findById(rq.getMemberId()).orElseThrow();
+        WeekPlan weekPlan = findTotalWeekInfoOrCreateWeek(rq.getStartTime(), rq.getEndTime(), member);
 
-        Day day = findOrCreateDayPlanWithDateTime(week, rq.getStartTime());
+        Day day = findOrCreateDayPlanWithDateTime(weekPlan, rq.getStartTime());
 
         TimeDo timeDo = new TimeDo(rq.getActualWork(), rq.getStartTime(), rq.getEndTime());
         day.addTimeDo(timeDo);
         return timeDo.getId();
     }
 
-    private Day findOrCreateDayPlanWithDateTime(Week week, LocalDateTime dateTime) {
-        if (week.isPersistedWeek()) {
-            return week.ensureDayPlanExists(dateTime);
+    private Day findOrCreateDayPlanWithDateTime(WeekPlan weekPlan, LocalDateTime dateTime) {
+        if (weekPlan.isPersistedWeek()) {
+            return weekPlan.ensureDayPlanExists(dateTime);
         }
         Day day = new Day(dateTime.toLocalDate());
-        day.addWeek(week);
+        day.addWeek(weekPlan);
         return day;
     }
 
-    private Week findOrCreateWeek(LocalDateTime startTime, LocalDateTime endTime) {
+    private WeekPlan findTotalWeekInfoOrCreateWeek(LocalDateTime startTime, LocalDateTime endTime, Member member) {
         return weekRepository.findTotalWeekInfoWithHourPlan(
                 startTime.toLocalDate(),
                 startTime,
                 endTime
-        ).orElseGet(() -> new Week(startTime.toLocalDate()));
+        ).orElseGet(() -> new WeekPlan(member, startTime.toLocalDate()));
     }
 
     public Long createDaySee(CreateDaySeeRq rq) {
+        Member member = memberRepository.findById(rq.getMemberId()).orElseThrow();
+        WeekPlan weekPlan = findWeekInfoOrCreateWeek(rq.getDate(), member);
         Day day = new Day(rq.getDate(), rq.getSee());
+        weekPlan.addDay(day);
         dayRepository.save(day);
         return day.getId();
     }
 
+    private WeekPlan findWeekInfoOrCreateWeek(LocalDate date, Member member) {
+        return weekRepository.findWeekWithHourPlan(
+                date
+        ).orElseGet(() -> new WeekPlan(member, date));
+    }
+
     public void updateWeekPlan(Long weekId, UpdateWeekPlanRq rq) {
-        Week week = weekRepository.findById(weekId).orElseThrow();
-        week.updatePlan(rq.getPlan());
+        WeekPlan weekPlan = weekRepository.findById(weekId).orElseThrow();
+        weekPlan.updatePlan(rq.getPlan());
     }
 
     public void updateTimePlan(Long timePlanId, UpdateTimePlanRq rq) {
