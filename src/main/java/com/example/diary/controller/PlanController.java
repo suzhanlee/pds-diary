@@ -55,9 +55,10 @@ public class PlanController {
     }
 
     @Operation(summary = "주간 계획과 특정 요일 계획 함께 조회")
-    @GetMapping("/plan/week/{date}")
-    public FindDayOfWeekPlanRs findDayOfWeekPlan(@PathVariable("date") LocalDate date) {
-        return findPlanService.findSpecificDayOfWeekPlan(date);
+    @GetMapping("/plan/week/{date}/{memberId}")
+    public FindDayOfWeekPlanRs findDayOfWeekPlan(@PathVariable("date") LocalDate date,
+                                                 @PathVariable("memberId") Long memberId) {
+        return findPlanService.findSpecificDayOfWeekPlan(date, memberId);
     }
 
     @Operation(summary = "주간 계획 수정")

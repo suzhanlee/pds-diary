@@ -14,8 +14,8 @@ public class FindPlanService {
 
     private final WeekRepository weekRepository;
 
-    public FindDayOfWeekPlanRs findSpecificDayOfWeekPlan(LocalDate date) {
-        return weekRepository.findWeekWithHourPlan(date)
+    public FindDayOfWeekPlanRs findSpecificDayOfWeekPlan(LocalDate date, long memberId) {
+        return weekRepository.findWeekWithHourPlan(date, memberId)
                 .map(FindDayOfWeekPlanRs::createByWeek)
                 .orElse(FindDayOfWeekPlanRs.empty(date));
     }
